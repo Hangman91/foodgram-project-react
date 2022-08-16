@@ -33,7 +33,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         'Ingredient',
         #on_delete=models.SET_NULL,
-        blank=True, null=True,
+        blank=True, #null=True,
         related_name='recipes'
     )
     tags = models.ForeignKey(
