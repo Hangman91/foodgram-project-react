@@ -31,14 +31,14 @@ class Recipe(models.Model):
     #image = pass
     text = models.TextField()
     ingredients = models.ManyToManyField(
-        'Ingredient',
-        #on_delete=models.SET_NULL,
-        blank=True, #null=True,
+        'AmountIngredient',
+#        on_delete=models.CASCADE,
+        blank=True, 
         related_name='recipes'
     )
-    tags = models.ForeignKey(
+    tags = models.ManyToManyField(
         'Tag',
-        on_delete=models.SET_NULL,
+       # on_delete=models.SET_NULL,
         blank=True, null=True,
         related_name='recipes'
     )
@@ -75,8 +75,25 @@ class Ingredient(models.Model):
         max_length=200
     )
 
+
+    def __str__(self):
+        return self.name
+
+class AmountIngredient(models.Model):
+    recipe = models.ForeignKey(
+        'Recipe',
+        on_delete=models.CASCADE,
+        related_name='Recipe_amount',
+        verbose_name='Рецепт',
+    )
+    ingredient = models.ForeignKey(
+        'Ingredient',
+        on_delete=models.CASCADE,
+        blank=True, #null=True,
+        related_name='amount_ingredient'
+    )
     amount = models.IntegerField(
         validators=[MinValueValidator(1)]
     )
     def __str__(self):
-        return self.name
+        return f'{self.amount} {self.ingredient}'
