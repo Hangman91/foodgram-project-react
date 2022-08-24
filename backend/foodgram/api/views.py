@@ -1,6 +1,6 @@
-from recipes.models import Tag, Recipe
+from recipes.models import Tag, Recipe, Ingredient
 from .mixins import ReadListOrObjectViewSet
-from .serializers import TagSerializer, RecipeSerialiser, RecipePostSerialiser
+from .serializers import TagSerializer, RecipeSerialiser, RecipePostSerialiser, IngredientSerialiser
 from rest_framework import viewsets
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -23,9 +23,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeSerialiser
         elif self.request.method in ("POST", "PATCH"):
             return RecipePostSerialiser
-            
+
     def perform_create(self, serializer):
         """Переназначаем create, чтобы подсунуть в него автора"""
         serializer.save(
             author=self.request.user
         )
+
+
+class IngredientViewSet(ReadListOrObjectViewSet):
+    """Вьюсет для ингредиентов"""
+
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerialiser
