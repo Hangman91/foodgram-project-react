@@ -1,24 +1,29 @@
 from recipes.models import Tag, Recipe
 from .mixins import ReadListOrObjectViewSet
-from .serializers import TagSerializer, RecipeSerialiser
-from rest_framework import viewsets 
-
-
+from .serializers import TagSerializer, RecipeSerialiser, RecipePostSerialiser
+from rest_framework import viewsets
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class TagViewSet(ReadListOrObjectViewSet):
     """Вьюсет для тэгов. Изменять тэги нельзя, потому рид онли"""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
-    #permission_classes = (permissions.AllowAny,)
+    # permission_classes = (permissions.AllowAny,)
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
     """Вьюсет для рецептов"""
 
     queryset = Recipe.objects.all()
-    serializer_class = RecipeSerialiser
 
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return RecipeSerialiser
+        elif self.request.method in ("POST", "PATCH"):
+            return RecipePostSerialiser
+            
     def perform_create(self, serializer):
         """Переназначаем create, чтобы подсунуть в него автора"""
         serializer.save(

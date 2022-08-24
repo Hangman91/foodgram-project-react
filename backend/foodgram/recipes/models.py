@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator 
+from django.core.validators import MinValueValidator
 User = get_user_model()
 
 
@@ -12,7 +12,7 @@ class Recipe(models.Model):
     *Название.
     *Картинка.
     *Текстовое описание.
-    *Ингредиенты: продукты для приготовления блюда по рецепту. 
+    *Ингредиенты: продукты для приготовления блюда по рецепту.
     Множественное поле, выбор из предустановленного списка,
     с указанием количества и единицы измерения.
     *Тег (можно установить несколько тегов на один рецепт,
@@ -28,25 +28,26 @@ class Recipe(models.Model):
     name = models.CharField(
         max_length=200
     )
-    #image = pass
+    # image = pass
     text = models.TextField()
     ingredients = models.ManyToManyField(
         'AmountIngredient',
-#        on_delete=models.CASCADE,
+    #  on_delete=models.CASCADE,
         blank=True, 
         related_name='recipes'
     )
     tags = models.ManyToManyField(
         'Tag',
-       # on_delete=models.SET_NULL,
-        blank=True, null=True,
+        blank=True,
         related_name='recipes'
     )
     cooking_time = models.IntegerField(
         validators=[MinValueValidator(1)]
     )
+
     def __str__(self):
         return self.name
+
 
 class Tag(models.Model):
 
@@ -61,8 +62,10 @@ class Tag(models.Model):
         max_length=7,
         unique=True
     )
+
     def __str__(self):
         return self.name
+
 
 class Ingredient(models.Model):
 
@@ -75,9 +78,9 @@ class Ingredient(models.Model):
         max_length=200
     )
 
-
     def __str__(self):
         return self.name
+
 
 class AmountIngredient(models.Model):
     recipe = models.ForeignKey(
@@ -89,11 +92,12 @@ class AmountIngredient(models.Model):
     ingredient = models.ForeignKey(
         'Ingredient',
         on_delete=models.CASCADE,
-        blank=True, #null=True,
+        blank=True,  # null=True,
         related_name='amount_ingredient'
     )
     amount = models.IntegerField(
         validators=[MinValueValidator(1)]
     )
+
     def __str__(self):
-        return f'{self.amount} {self.ingredient}'
+        return f'{self.amount} {self.ingredient.measurement_unit} {self.ingredient.name}'
