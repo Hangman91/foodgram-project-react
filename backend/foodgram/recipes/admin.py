@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import AmountIngredient, Ingredient, Recipe, Tag
+from .models import AmountIngredient, Favorite, Ingredient, Recipe, Tag
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -24,8 +24,11 @@ class TagAdmin(admin.ModelAdmin):
 class AmountIngredientAdmin(admin.ModelAdmin):
     list_display = ('ingredient', 'amount', 'id')
 
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('user', 'recipe', 'id')
 
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(AmountIngredient, AmountIngredientAdmin)
+admin.site.register(Favorite, FavoriteAdmin)

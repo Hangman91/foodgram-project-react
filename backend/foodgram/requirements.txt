@@ -9,3 +9,5 @@ djoser==2.1.0
 psycopg2-binary==2.8.6 
 python-dotenv
 gunicorn
+Pillow==8.1.0
+django-extra-fields
