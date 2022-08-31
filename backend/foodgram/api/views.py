@@ -1,19 +1,19 @@
 import os
 
-from django.http import HttpResponse
-
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponse
 from django.shortcuts import get_list_or_404, get_object_or_404
-from rest_framework import filters, permissions, status, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from recipes.models import (AmountIngredient, Favorite, Ingredient, Recipe,
+                            ShoppingCart, Tag)
+from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-from recipes.models import Favorite, Ingredient, Recipe, Tag, ShoppingCart, AmountIngredient
 from users.models import Follow
 
-from .mixins import (CreateOrDeleteViewSet, ReadListOrObjectViewSet,
-                     ReadListViewSet, ReadOrCreateViewSet)
+from .filters import IngredientFilter, RecipeFilter
+from .mixins import (ReadListOrObjectViewSet, ReadOrCreateViewSet)
 from .permissions import AuthorOrReadOnly
 from .serializers import (FavoriteSerializer, FollowListSerializer,
                           IngredientSerialiser, RecipePostSerialiser,
@@ -25,9 +25,11 @@ User = get_user_model()
 FILENAME = 'Shopping_cart.txt'
 FILETYPE = 'text/plain; charset="UTF-8"'
 
+
 class TagViewSet(ReadListOrObjectViewSet):
     """Вьюсет для тэгов. Изменять тэги нельзя, потому рид онли"""
 
+    permission_classes = (permissions.AllowAny,)
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
@@ -36,6 +38,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
     """Вьюсет для рецептов"""
     permission_classes = (AuthorOrReadOnly,)
     queryset = Recipe.objects.all()
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RecipeFilter
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -82,7 +86,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
             shopping_cart_serializer.save()
             return self.retrieve(request)
         elif request.method == 'DELETE':
-            shopping_cart = get_object_or_404(ShoppingCart, user=user, recipe=recipe)
+            shopping_cart = get_object_or_404(
+                ShoppingCart,
+                user=user,
+                recipe=recipe
+            )
             shopping_cart.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -92,7 +100,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
             url_name='download_shopping_cart',
             permission_classes=(permissions.IsAuthenticated,))
     def download_shopping_cart(self, request, *args, **kwargs):
-        # TODO сделать pdf
         user = get_object_or_404(User, id=request.user.id)
         recipes = user.shopping_list.values_list('recipe', flat=True)
         queryset = AmountIngredient.objects.filter(recipe__in=recipes).all()
@@ -126,8 +133,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
 class IngredientViewSet(ReadListOrObjectViewSet):
     """Вьюсет для ингредиентов"""
 
+    permission_classes = (permissions.AllowAny,)
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerialiser
+    filterset_class = IngredientFilter
+
 
 class FollowListViewSet(ReadOrCreateViewSet):
 
@@ -156,7 +166,7 @@ class FollowListViewSet(ReadOrCreateViewSet):
         Follow.objects.create(
             user=request.user, following=user)
 
-        return Response(status=status.HTTP_201_CREATED )
+        return Response(status=status.HTTP_201_CREATED)
 
     def delete(self, request, *args, **kwargs):
         user_id = self.kwargs['users_id']
@@ -172,6 +182,3 @@ class FollowListViewSet(ReadOrCreateViewSet):
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
         subscribe.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-    

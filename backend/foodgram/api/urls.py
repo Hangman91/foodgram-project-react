@@ -22,12 +22,12 @@ router.register(
 router.register(
     'users/subscriptions',
     FollowListViewSet,
-    basename = 'follows'
+    basename='follows'
 )
 router.register(
     'users/(?P<users_id>[^/.]+)/subscribe',
     FollowListViewSet,
-    basename = 'follows'
+    basename='follows'
 )
 
 
@@ -48,6 +48,4 @@ urlpatterns = [
         r'auth/',
         include('djoser.urls.authtoken')
     ),
-
-
 ]

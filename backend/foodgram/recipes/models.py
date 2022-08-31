@@ -36,7 +36,7 @@ class Recipe(models.Model):
     text = models.TextField()
     ingredients = models.ManyToManyField(
         'AmountIngredient',
-        blank=True, 
+        blank=True,
         related_name='recipes'
     )
     tags = models.ManyToManyField(
@@ -52,6 +52,7 @@ class Recipe(models.Model):
         ordering = ('id', )
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
+
     def __str__(self):
         return self.name
 
@@ -89,6 +90,7 @@ class Ingredient(models.Model):
     measurement_unit = models.CharField(
         max_length=200
     )
+
     class Meta:
         ordering = ('name', )
         verbose_name = 'Ингредиент'
@@ -114,13 +116,19 @@ class AmountIngredient(models.Model):
     amount = models.IntegerField(
         validators=[MinValueValidator(1)]
     )
+
     class Meta:
         ordering = ('recipe', )
         verbose_name = 'Количество ингрединента'
         verbose_name_plural = 'Количества ингрединентов'
 
     def __str__(self):
-        return f'{self.amount} {self.ingredient.measurement_unit} {self.ingredient.name}'
+        return (
+            f'{self.amount}',
+            f'{self.ingredient.measurement_unit}',
+            f'{self.ingredient.name}'
+        )
+
 
 class Favorite(models.Model):
 

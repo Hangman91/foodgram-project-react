@@ -11,3 +11,4 @@ python-dotenv
 gunicorn
 Pillow==8.1.0
 django-extra-fields
+django-filter

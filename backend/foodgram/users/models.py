@@ -31,6 +31,7 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
+
 class Follow(models.Model):
     """Модель для подписок.
     Присутствует подписчик и на кого подписываются."""
@@ -53,5 +54,6 @@ class Follow(models.Model):
                 name='unique_follow'
             )
         ]
+
     def __str__(self):
         return f'{self.user.username} - {self.following.username}'
