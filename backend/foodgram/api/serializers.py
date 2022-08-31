@@ -4,9 +4,11 @@ from urllib import request
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
-from recipes.models import AmountIngredient, Favorite, Ingredient, Recipe, Tag
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
+
+from recipes.models import (AmountIngredient, Favorite, Ingredient, Recipe,
+                            ShoppingCart, Tag)
 from users.models import Follow, User
 
 User = get_user_model()
@@ -23,7 +25,6 @@ class UserSerializer(serializers.ModelSerializer):
     def get_is_subscribed(self, obj):
 
         request = self.context.get('request')
-        print(11111111111111, request)
         if request.user.is_anonymous:
             return False
         if Follow.objects.filter(
@@ -108,6 +109,9 @@ class RecipeSerialiser(serializers.ModelSerializer):
     author = UserMeSerializer()
     image = Base64ImageField()
     is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField(
+        read_only=True
+    )
     class Meta:
         model = Recipe
         fields = (
@@ -118,17 +122,25 @@ class RecipeSerialiser(serializers.ModelSerializer):
             'tags',
             'image',
             'cooking_time',
-            'is_favorited'
+            'is_favorited',
+            'is_in_shopping_cart'
         )
         read_only_fields = ('author',)
 
     def get_is_favorited(self, obj):
         user = self.context["request"].user
-        print(user)
         if user.is_anonymous:
             return False
         print(user, obj)
         return Favorite.objects.filter(user=user, recipe=obj).exists()
+    
+    
+    def get_is_in_shopping_cart(self, obj):
+        user = self.context['request'].user
+        if user.is_anonymous:
+            return False
+        return ShoppingCart.objects.filter(user=user, recipe=obj).exists()
+
 
 class RecipePostSerialiser(serializers.ModelSerializer):
     """Сериализатор для создания  Рецептов"""
@@ -219,7 +231,7 @@ class FollowListSerializer(serializers.ModelSerializer):
             user = request.user, following__id=obj.id).exists():
             return True
         return False
-        
+
     def get_recipes(self, obj):
         request = self.context.get('request')
         if request.method == 'GET':
@@ -240,3 +252,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
         fields = ('user', 'recipe')
         model = Favorite
 
+class ShoppingCartSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('user', 'recipe')
+        model = ShoppingCart

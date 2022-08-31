@@ -1,12 +1,15 @@
-from http import HTTPStatus
+import os
+
+from django.http import HttpResponse
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_list_or_404, get_object_or_404
-from recipes.models import Favorite, Ingredient, Recipe, Tag
 from rest_framework import filters, permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
+
+from recipes.models import Favorite, Ingredient, Recipe, Tag, ShoppingCart, AmountIngredient
 from users.models import Follow
 
 from .mixins import (CreateOrDeleteViewSet, ReadListOrObjectViewSet,
@@ -14,9 +17,13 @@ from .mixins import (CreateOrDeleteViewSet, ReadListOrObjectViewSet,
 from .permissions import AuthorOrReadOnly
 from .serializers import (FavoriteSerializer, FollowListSerializer,
                           IngredientSerialiser, RecipePostSerialiser,
-                          RecipeSerialiser, TagSerializer)
+                          RecipeSerialiser, ShoppingCartSerializer,
+                          TagSerializer)
 
 User = get_user_model()
+
+FILENAME = 'Shopping_cart.txt'
+FILETYPE = 'text/plain; charset="UTF-8"'
 
 class TagViewSet(ReadListOrObjectViewSet):
     """Вьюсет для тэгов. Изменять тэги нельзя, потому рид онли"""
@@ -60,6 +67,60 @@ class RecipeViewSet(viewsets.ModelViewSet):
             favorite.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=('post', 'delete'), detail=False,
+            url_path=r'(?P<pk>\d+)/shopping_cart',
+            permission_classes=(permissions.IsAuthenticated,))
+    def shopping_cart(self, request, **kwargs):
+        user = get_object_or_404(User, id=request.user.id)
+        recipe = get_object_or_404(Recipe, id=self.kwargs.get('pk'))
+        if request.method == 'POST':
+            shopping_cart_serializer = ShoppingCartSerializer(
+                data={'user': user.id, 'recipe': recipe.id}
+            )
+            shopping_cart_serializer.is_valid(raise_exception=True)
+            shopping_cart_serializer.save()
+            return self.retrieve(request)
+        elif request.method == 'DELETE':
+            shopping_cart = get_object_or_404(ShoppingCart, user=user, recipe=recipe)
+            shopping_cart.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=('get',), detail=False,
+            url_path='download_shopping_cart',
+            url_name='download_shopping_cart',
+            permission_classes=(permissions.IsAuthenticated,))
+    def download_shopping_cart(self, request, *args, **kwargs):
+        # TODO сделать pdf
+        user = get_object_or_404(User, id=request.user.id)
+        recipes = user.shopping_list.values_list('recipe', flat=True)
+        queryset = AmountIngredient.objects.filter(recipe__in=recipes).all()
+        result = {}
+        for ing_res in queryset:
+            print(ing_res)
+            ing = ing_res.ingredient
+            if ing.name not in result.keys():
+                result[ing.name] = {
+                    'name': ing.name,
+                    'amount': ing_res.amount,
+                    'unit': ing.measurement_unit
+                }
+            else:
+                result[ing.name]['amount'] += ing_res.amount
+
+        lines = ['Ингридиенты, Количество, ед. изм.\n']
+        for line in result.values():
+            lines.append('{name}, {amount}, {unit}\n'.format(**line))
+
+        with open(FILENAME, 'x') as shopping_list:
+            shopping_list.writelines(lines)
+        with open(FILENAME, 'r') as shopping_list:
+            response = HttpResponse(shopping_list, content_type=FILETYPE)
+            response['Content-Disposition'] = ('attachment;'
+                                               f'filename="{FILENAME}"')
+        os.remove(os.path.abspath(FILENAME))
+        return response
 
 
 class IngredientViewSet(ReadListOrObjectViewSet):

@@ -48,6 +48,10 @@ class Recipe(models.Model):
         validators=[MinValueValidator(1)]
     )
 
+    class Meta:
+        ordering = ('id', )
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
     def __str__(self):
         return self.name
 
@@ -66,6 +70,11 @@ class Tag(models.Model):
         unique=True
     )
 
+    class Meta:
+        ordering = ('name', )
+        verbose_name = 'Тэг'
+        verbose_name_plural = 'Тэги'
+
     def __str__(self):
         return self.name
 
@@ -80,6 +89,10 @@ class Ingredient(models.Model):
     measurement_unit = models.CharField(
         max_length=200
     )
+    class Meta:
+        ordering = ('name', )
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
         return self.name
@@ -101,6 +114,10 @@ class AmountIngredient(models.Model):
     amount = models.IntegerField(
         validators=[MinValueValidator(1)]
     )
+    class Meta:
+        ordering = ('recipe', )
+        verbose_name = 'Количество ингрединента'
+        verbose_name_plural = 'Количества ингрединентов'
 
     def __str__(self):
         return f'{self.amount} {self.ingredient.measurement_unit} {self.ingredient.name}'
@@ -130,3 +147,34 @@ class Favorite(models.Model):
     def __str__(self):
 
         return f'{self.recipe} {self.user}'
+
+
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(
+        User,
+        verbose_name='Пользователь',
+        on_delete=models.CASCADE,
+        related_name='shopping_list',
+        help_text='Владелец списка покупок'
+    )
+    recipe = models.ForeignKey(
+        Recipe,
+        verbose_name='Рецепт в списке покупок',
+        on_delete=models.CASCADE,
+        related_name='users_carts',
+        help_text='Корзины пользователей'
+    )
+
+    class Meta:
+        ordering = ('recipe', )
+        verbose_name = 'Элемент списка покупок'
+        verbose_name_plural = 'Элементы списка покупок'
+        constraints = (
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='unique_cart_item'
+                ),
+        )
+
+    def __str__(self) -> str:
+        return f'{self.recipe} in cart {self.user}'
