@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from users.models import Follow
 
 from .filters import IngredientFilter, RecipeFilter
-from .mixins import (ReadListOrObjectViewSet, ReadOrCreateViewSet)
+from .mixins import (ReadListObjectViewSet, ReadOrCreateViewSet)
 from .permissions import AuthorOrReadOnly
 from .serializers import (FavoriteSerializer, FollowListSerializer,
                           IngredientSerialiser, RecipePostSerialiser,
@@ -22,11 +22,8 @@ from .serializers import (FavoriteSerializer, FollowListSerializer,
 
 User = get_user_model()
 
-FILENAME = 'Shopping_cart.txt'
-FILETYPE = 'text/plain; charset="UTF-8"'
 
-
-class TagViewSet(ReadListOrObjectViewSet):
+class TagViewSet(ReadListObjectViewSet):
     """Вьюсет для тэгов. Изменять тэги нельзя, потому рид онли"""
 
     permission_classes = (permissions.AllowAny,)
@@ -105,7 +102,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         queryset = AmountIngredient.objects.filter(recipe__in=recipes).all()
         result = {}
         for ing_res in queryset:
-            print(ing_res)
             ing = ing_res.ingredient
             if ing.name not in result.keys():
                 result[ing.name] = {
@@ -120,17 +116,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
         for line in result.values():
             lines.append('{name}, {amount}, {unit}\n'.format(**line))
 
-        with open(FILENAME, 'x') as shopping_list:
+        with open('Shopping_cart.txt', 'x') as shopping_list:
             shopping_list.writelines(lines)
-        with open(FILENAME, 'r') as shopping_list:
-            response = HttpResponse(shopping_list, content_type=FILETYPE)
+
+        with open('Shopping_cart.txt', 'r') as shopping_list:
+            response = HttpResponse(
+                shopping_list,
+                content_type='text/plain; charset="UTF-8"'
+            )
             response['Content-Disposition'] = ('attachment;'
-                                               f'filename="{FILENAME}"')
-        os.remove(os.path.abspath(FILENAME))
+                                               'filename=Shopping_cart.txt')
+        os.remove(os.path.abspath('Shopping_cart.txt'))
         return response
 
 
-class IngredientViewSet(ReadListOrObjectViewSet):
+class IngredientViewSet(ReadListObjectViewSet):
     """Вьюсет для ингредиентов"""
 
     permission_classes = (permissions.AllowAny,)

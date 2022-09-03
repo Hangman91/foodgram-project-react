@@ -1,8 +1,10 @@
 from drf_extra_fields.fields import Base64ImageField
+
+from rest_framework import serializers
+
+from users.models import Follow, User
 from recipes.models import (AmountIngredient, Favorite, Ingredient, Recipe,
                             ShoppingCart, Tag)
-from rest_framework import serializers
-from users.models import Follow, User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -143,7 +145,6 @@ class RecipeSerialiser(serializers.ModelSerializer):
         user = self.context["request"].user
         if user.is_anonymous:
             return False
-        print(user, obj)
         return Favorite.objects.filter(user=user, recipe=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):

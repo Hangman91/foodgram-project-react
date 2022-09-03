@@ -1,7 +1,7 @@
 from rest_framework import mixins, viewsets
 
 
-class ReadListOrObjectViewSet(
+class ReadListObjectViewSet(
     mixins.ListModelMixin,
     viewsets.GenericViewSet,
     mixins.RetrieveModelMixin
@@ -22,6 +22,7 @@ class ReadOrCreateViewSet(
     viewsets.GenericViewSet
 ):
     pass
+
 
 class CreateOrDeleteViewSet(
     mixins.CreateModelMixin,
