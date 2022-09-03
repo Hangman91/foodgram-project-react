@@ -4,14 +4,14 @@ from django.shortcuts import get_list_or_404, get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
 
-from api.mixins import ReadOrCreateViewSet
-from api.serializers import FollowListSerializer
+from api.mixins import ReadCreateViewSet
+from .serializers import FollowListSerializer
 from .models import Follow
 
 User = get_user_model()
 
 
-class FollowListViewSet(ReadOrCreateViewSet):
+class FollowListViewSet(ReadCreateViewSet):
 
     serializer_class = FollowListSerializer
 

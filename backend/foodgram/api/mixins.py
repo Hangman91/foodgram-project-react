@@ -16,7 +16,7 @@ class ReadListViewSet(
     pass
 
 
-class ReadOrCreateViewSet(
+class ReadCreateViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,
     viewsets.GenericViewSet
@@ -24,7 +24,7 @@ class ReadOrCreateViewSet(
     pass
 
 
-class CreateOrDeleteViewSet(
+class CreateDeleteViewSet(
     mixins.CreateModelMixin,
     mixins.DestroyModelMixin,
     viewsets.GenericViewSet
