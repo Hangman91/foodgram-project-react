@@ -1,24 +1,21 @@
 import os
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (AmountIngredient, Favorite, Ingredient, Recipe,
-                            ShoppingCart, Tag)
 from rest_framework import permissions, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from users.models import Follow
 
+from recipes.models import (AmountIngredient, Favorite, Ingredient, Recipe,
+                            ShoppingCart, Tag)
 from .filters import IngredientFilter, RecipeFilter
-from .mixins import (ReadListObjectViewSet, ReadOrCreateViewSet)
+from .mixins import ReadListObjectViewSet
 from .permissions import AuthorOrReadOnly
-from .serializers import (FavoriteSerializer, FollowListSerializer,
-                          IngredientSerialiser, RecipePostSerialiser,
-                          RecipeSerialiser, ShoppingCartSerializer,
-                          TagSerializer)
+from .serializers import (FavoriteSerializer, IngredientSerialiser,
+                          RecipePostSerialiser, RecipeSerialiser,
+                          ShoppingCartSerializer, TagSerializer)
 
 User = get_user_model()
 
@@ -139,46 +136,46 @@ class IngredientViewSet(ReadListObjectViewSet):
     filterset_class = IngredientFilter
 
 
-class FollowListViewSet(ReadOrCreateViewSet):
+# class FollowListViewSet(ReadOrCreateViewSet):
 
-    serializer_class = FollowListSerializer
+#     serializer_class = FollowListSerializer
 
-    def get_queryset(self):
-        return get_list_or_404(User, following__user=self.request.user)
+#     def get_queryset(self):
+#         return get_list_or_404(User, following__user=self.request.user)
 
-    def create(self, request, *args, **kwargs):
+#     def create(self, request, *args, **kwargs):
 
-        user_id = self.kwargs.get('users_id')
-        user = get_object_or_404(User, id=user_id)
-        double_subscribe = Follow.objects.filter(
-            user=request.user,
-            following=user
-        ).exists()
+#         user_id = self.kwargs.get('users_id')
+#         user = get_object_or_404(User, id=user_id)
+#         double_subscribe = Follow.objects.filter(
+#             user=request.user,
+#             following=user
+#         ).exists()
 
-        if request.user.id == int(user_id):
-            error = {'errors': 'Невозможно подписаться на самого себя'}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+#         if request.user.id == int(user_id):
+#             error = {'errors': 'Невозможно подписаться на самого себя'}
+#             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        elif double_subscribe:
-            error = {'errors': 'Вы уже подписаны на этого пользователя'}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+#         elif double_subscribe:
+#             error = {'errors': 'Вы уже подписаны на этого пользователя'}
+#             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
-        Follow.objects.create(
-            user=request.user, following=user)
+#         Follow.objects.create(
+#             user=request.user, following=user)
 
-        return Response(status=status.HTTP_201_CREATED)
+#         return Response(status=status.HTTP_201_CREATED)
 
-    def delete(self, request, *args, **kwargs):
-        user_id = self.kwargs['users_id']
-        subscribe_user = get_object_or_404(User, id=user_id)
+#     def delete(self, request, *args, **kwargs):
+#         user_id = self.kwargs['users_id']
+#         subscribe_user = get_object_or_404(User, id=user_id)
 
-        try:
-            subscribe = Follow.objects.get(
-                user=request.user,
-                following=subscribe_user
-            )
-        except ObjectDoesNotExist:
-            error = {'errors': 'Вы не подписаны на этого пользователя'}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
-        subscribe.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#         try:
+#             subscribe = Follow.objects.get(
+#                 user=request.user,
+#                 following=subscribe_user
+#             )
+#         except ObjectDoesNotExist:
+#             error = {'errors': 'Вы не подписаны на этого пользователя'}
+#             return Response(error, status=status.HTTP_400_BAD_REQUEST)
+#         subscribe.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
