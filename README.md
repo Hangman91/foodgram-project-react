@@ -135,3 +135,5 @@ docker-compose exec web python manage.py loaddata дамп_бд.json
 По совместительству преподаватель кафедры Метрологии.
 
 Привет, ревьюер =)
+
+ssh astalavista9911@84.252.137.124
