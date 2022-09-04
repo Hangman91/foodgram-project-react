@@ -9,9 +9,7 @@ services:
       - ./.env
 
   backend:
-    build: 
-      context: ./../backend/foodgram 
-      dockerfile: Dockerfile
+    image: astalavista91/foodgram:latest
     restart: always
     volumes:
       - static_value:/app/backend_static/
@@ -23,9 +21,7 @@ services:
 
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: astalavista91/frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
 
