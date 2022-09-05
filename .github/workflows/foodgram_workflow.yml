@@ -58,5 +58,4 @@ jobs:
           echo DB_PORT=${{ secrets.DB_PORT }} >> .env
           sudo docker-compose up -d --force-recreate
           sudo docker-compose exec -T backend python3 manage.py migrate
-          sudo docker-compose exec -T backend python3 manage.py createsuperuser
           sudo docker-compose exec -T backend python3 manage.py collectstatic --no-input
