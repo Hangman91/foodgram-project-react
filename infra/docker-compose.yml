@@ -7,6 +7,10 @@ services:
       - /var/lib/postgresql/data/
     env_file:
       - ./.env
+    environment:
+      POSTGRES_DB: "foodgram"
+      POSTGRES_USER: "foodgram_user"
+      POSTGRES_PASSWORD: "food2610"
 
   backend:
     image: astalavista91/foodgram:latest
