@@ -23,7 +23,6 @@ services:
     env_file:
       - ./.env
 
-
   frontend:
     image: astalavista91/frontend:latest
     volumes:
