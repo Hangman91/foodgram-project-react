@@ -41,6 +41,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return RecipeSerialiser
         elif self.request.method in ("POST", "PATCH"):
             return RecipePostSerialiser
+        return
 
     def perform_create(self, serializer):
         """Переназначаем create, чтобы подсунуть в него автора"""
