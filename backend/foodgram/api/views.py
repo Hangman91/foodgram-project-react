@@ -10,10 +10,10 @@ from rest_framework.response import Response
 
 from recipes.models import (AmountIngredient, Favorite, Ingredient, Recipe,
                             ShoppingCart, Tag)
-from .filters import IngredientFilter, RecipeFilter
-from .mixins import ReadListObjectViewSet
-from .permissions import AuthorOrReadOnly
-from .serializers import (FavoriteSerializer, IngredientSerialiser,
+from api.filters import IngredientFilter, RecipeFilter
+from api.mixins import ReadListObjectViewSet
+from api.permissions import AuthorOrReadOnly
+from api.serializers import (FavoriteSerializer, IngredientSerialiser,
                           RecipePostSerialiser, RecipeSerialiser,
                           ShoppingCartSerializer, TagSerializer)
 
