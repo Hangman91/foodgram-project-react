@@ -11,7 +11,7 @@ from import_export.admin import ImportMixin
 class IngResource(resources.ModelResource):
     class Meta:
         model = Ingredient
-        fields = ('measurement_unit', 'name',)
+        fields = ('measurement_unit', 'name', 'id')
 
 ################################################
 
