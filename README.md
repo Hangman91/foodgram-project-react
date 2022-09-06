@@ -1,9 +1,12 @@
 # Dementev's foodgram
 
-[Main workflow](https://github.com/Hangman91/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+![Main workflow](https://github.com/Hangman91/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
 Foodgram - проект сайта, аккумулирующего рецепты, позволяющий искать по ключевым словам, тэгам, вкусам и так далее. 
 У Вас будет возможность выбрать понравившиеся рецепты, отложить их в "избранное", а также создать и скачать список покупок. 
+
+Можно затестить по ссылке:
+http://51.250.27.161/
 
 ### При разработке использованы технологии:
 Python 3.7
@@ -134,6 +137,3 @@ docker-compose exec web python manage.py loaddata дамп_бд.json
 Занимаюсь приёмом абитуриентов, профориентацией, проведением олимпиад. 
 По совместительству преподаватель кафедры Метрологии.
 
-Привет, ревьюер =)
-
-ssh astalavista9911@84.252.137.124
