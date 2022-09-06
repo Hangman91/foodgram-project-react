@@ -153,7 +153,7 @@ AUTH_USER_MODEL = 'users.User'
 DJOSER = {
     'SERIALIZERS': {
         'user': 'api.serializers.UserSerializer',
-        'current_user': 'api.serializers.UserMeSerializer',
+        'current_user': 'api.serializers.UserSerializer',
     },
     'LOGIN_FIELD': 'email'
 }
