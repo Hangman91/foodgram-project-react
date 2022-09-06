@@ -180,7 +180,7 @@ class ShoppingCart(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'recipe'],
                 name='unique_cart_item'
-                ),
+            ),
         )
 
     def __str__(self) -> str:
