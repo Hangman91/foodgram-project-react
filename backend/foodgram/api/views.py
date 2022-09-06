@@ -14,8 +14,8 @@ from api.filters import IngredientFilter, RecipeFilter
 from api.mixins import ReadListObjectViewSet
 from api.permissions import AuthorOrReadOnly
 from api.serializers import (FavoriteSerializer, IngredientSerialiser,
-                          RecipePostSerialiser, RecipeSerialiser,
-                          ShoppingCartSerializer, TagSerializer)
+                             RecipePostSerialiser, RecipeSerialiser,
+                             ShoppingCartSerializer, TagSerializer)
 
 User = get_user_model()
 
