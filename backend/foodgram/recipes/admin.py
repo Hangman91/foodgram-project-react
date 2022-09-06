@@ -1,7 +1,21 @@
 from django.contrib import admin
 
-from .models import (AmountIngredient, Favorite, Ingredient, Recipe,
+from recipes.models import (AmountIngredient, Favorite, Ingredient, Recipe,
                      ShoppingCart, Tag)
+
+# dfdsfsdfsd
+from import_export import resources
+from import_export.admin import ImportMixin
+
+
+class IngResource(resources.ModelResource):
+    class Meta:
+        model = Ingredient
+        fields = ('measurement_unit', 'name',)
+
+################################################
+
+
 
 
 class RecipeAdmin(admin.ModelAdmin):
@@ -9,12 +23,11 @@ class RecipeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     list_filter = ('tags',)
 
-
-class IngredientAdmin(admin.ModelAdmin):
+class IngredientAdmin(ImportMixin, admin.ModelAdmin):
     list_display = ('name', 'measurement_unit', 'id')
     search_fields = ('name',)
     list_filter = ('name',)
-
+    resource_class = IngResource
 
 class TagAdmin(admin.ModelAdmin):
     list_display = ('name', 'slug', 'id')
