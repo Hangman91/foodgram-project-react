@@ -1,6 +1,6 @@
 # Dementev's foodgram
 
-[Main workflow](Будет реализован тут)
+[Main workflow](https://github.com/Hangman91/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
 
 Foodgram - проект сайта, аккумулирующего рецепты, позволяющий искать по ключевым словам, тэгам, вкусам и так далее. 
 У Вас будет возможность выбрать понравившиеся рецепты, отложить их в "избранное", а также создать и скачать список покупок. 

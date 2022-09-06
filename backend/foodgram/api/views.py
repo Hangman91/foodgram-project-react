@@ -26,6 +26,7 @@ class TagViewSet(ReadListObjectViewSet):
     permission_classes = (permissions.AllowAny,)
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    pagination_class = None
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -134,3 +135,4 @@ class IngredientViewSet(ReadListObjectViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerialiser
     filterset_class = IngredientFilter
+    pagination_class = None
