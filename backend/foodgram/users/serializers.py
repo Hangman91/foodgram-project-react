@@ -32,35 +32,6 @@ class UserSerializer(serializers.ModelSerializer):
         return False
 
 
-class UserMeSerializer(serializers.ModelSerializer):
-    """Сериализатор для понимания, кто есть я."""
-
-    is_subscribed = serializers.SerializerMethodField()
-
-    class Meta:
-        model = User
-        fields = (
-            'username',
-            'email',
-            'first_name',
-            'last_name',
-            'id',
-            'is_subscribed'
-        )
-
-    def get_is_subscribed(self, obj):
-
-        request = self.context.get('request')
-        if request.user.is_anonymous:
-            return False
-        if Follow.objects.filter(
-            user=request.user,
-            following__id=obj.id
-        ).exists():
-            return True
-        return False
-
-
 class FollowListSerializer(serializers.ModelSerializer):
     """Сериализатор для модели Follow"""
 
