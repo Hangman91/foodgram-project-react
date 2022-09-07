@@ -19,7 +19,7 @@ SECRET_KEY = 'c5h6r55-ey8xa!^^ruyds@)4m&@3zf7g=)k0e4%4-5_mp!hfj^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['dementev-foodgram.ddns.net', '51.250.27.161', 'backend']
+ALLOWED_HOSTS = [*]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
