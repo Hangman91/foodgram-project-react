@@ -5,9 +5,12 @@ from recipes.models import (AmountIngredient, Favorite, Ingredient, Recipe,
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'text', 'author', 'id')
+    list_display = ('name', 'text', 'id', 'get_favorite_count')
     search_fields = ('name',)
-    list_filter = ('tags',)
+    list_filter = ('name', 'author', 'tags', )
+
+    def get_favorite_count(self, obj):
+        return obj.users_favorites.count()
 
 
 class IngredientAdmin(admin.ModelAdmin):

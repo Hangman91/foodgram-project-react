@@ -10,7 +10,6 @@ class UserAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'id',
-        'is_subscribed'
     )
     search_fields = ('username',)
     list_filter = ('email', 'first_name', 'last_name', )
