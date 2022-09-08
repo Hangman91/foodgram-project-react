@@ -13,7 +13,7 @@ class UserAdmin(admin.ModelAdmin):
         'is_subscribed'
     )
     search_fields = ('username',)
-    list_filter = ('email','first_name', 'last_name',)
+    list_filter = ('email', 'first_name', 'last_name', )
 
 
 class FollowAdmin(admin.ModelAdmin):
