@@ -1,5 +1,6 @@
 from django.contrib import admin
 from rest_framework.authtoken.models import TokenProxy
+from django.contrib.auth.models import Group
 from users.models import Follow, User
 
 
@@ -33,3 +34,4 @@ class TokenAdmin(admin.ModelAdmin):
 admin.site.register(User, UserAdmin)
 admin.site.register(Follow, FollowAdmin)
 admin.site.unregister(TokenProxy)
+admin.site.unregister(Group)
