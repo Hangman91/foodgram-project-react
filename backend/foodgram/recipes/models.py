@@ -23,29 +23,35 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='recipes'
+        related_name='recipes',
+        verbose_name='Автор'
     )
 
     name = models.CharField(
-        max_length=200
+        max_length=200,
+        verbose_name='Название рецепта'
     )
     image = models.ImageField(
         verbose_name='Изображение блюда',
         upload_to='recipe_images/',
     )
-    text = models.TextField()
+    text = models.TextField(,
+        verbose_name='Описание рецепта')
     ingredients = models.ManyToManyField(
         'AmountIngredient',
         blank=True,
-        related_name='recipes'
+        related_name='recipes',
+        verbose_name='Ингредиент'
     )
     tags = models.ManyToManyField(
         'Tag',
         blank=True,
-        related_name='recipes'
+        related_name='recipes',
+        verbose_name='Тэг'
     )
     cooking_time = models.IntegerField(
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(1)],
+        verbose_name='Время готовки'
     )
 
     class Meta:
@@ -61,14 +67,17 @@ class Tag(models.Model):
 
     name = models.CharField(
         max_length=200,
-        unique=True
+        unique=True,
+        verbose_name='Название тэга'
     )
     slug = models.SlugField(
-        unique=True
+        unique=True,
+        verbose_name='Слаг'
     )
     color = models.CharField(
         max_length=7,
-        unique=True
+        unique=True,
+        verbose_name='Цвет'
     )
 
     class Meta:
@@ -83,11 +92,13 @@ class Tag(models.Model):
 class Ingredient(models.Model):
 
     name = models.CharField(
-        max_length=200
+        max_length=200,
+        verbose_name='Название'
     )
 
     measurement_unit = models.CharField(
-        max_length=200
+        max_length=200,
+        verbose_name='Мера измерения'
     )
 
     class Meta:
