@@ -119,10 +119,12 @@ class AmountIngredient(models.Model):
         'Ingredient',
         on_delete=models.CASCADE,
         blank=True,  # null=True,
-        related_name='amount_ingredient'
+        related_name='amount_ingredient',
+        verbose_name='Ингредиент'
     )
     amount = models.IntegerField(
-        validators=[MinValueValidator(1)]
+        validators=[MinValueValidator(1)],
+        verbose_name='Количество'
     )
 
     class Meta:
