@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.models import Group
+from rest_framework.authtoken.models import Token
 
 from users.models import Follow, User
 
@@ -27,4 +27,4 @@ class FollowAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Follow, FollowAdmin)
-admin.site.unregister(Group)
+admin.site.unregister(Token)
