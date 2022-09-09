@@ -4,6 +4,7 @@ from django.contrib.auth.models import Group
 from users.models import Follow, User
 
 
+@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
         'username',
@@ -16,6 +17,7 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ('email', 'first_name', 'last_name', )
 
 
+@admin.register(Follow)
 class FollowAdmin(admin.ModelAdmin):
     list_display = (
         'user',
@@ -31,7 +33,5 @@ class TokenAdmin(admin.ModelAdmin):
         return False
 
 
-admin.site.register(User, UserAdmin)
-admin.site.register(Follow, FollowAdmin)
 admin.site.unregister(TokenProxy)
 admin.site.unregister(Group)
