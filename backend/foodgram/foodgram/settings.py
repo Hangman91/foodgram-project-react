@@ -26,8 +26,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Application definition
 
 INSTALLED_APPS = [
-    'users.apps.UsersConfig',
-    'recipes.apps.RecipesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -37,6 +35,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'users.apps.UsersConfig',
+    'recipes.apps.RecipesConfig',
     'django_filters',
     'import_export',
 ]
