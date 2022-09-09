@@ -26,7 +26,6 @@ class Recipe(models.Model):
         related_name='recipes',
         verbose_name='Автор'
     )
-
     name = models.CharField(
         max_length=200,
         verbose_name='Название рецепта'
@@ -95,7 +94,6 @@ class Ingredient(models.Model):
         max_length=200,
         verbose_name='Название'
     )
-
     measurement_unit = models.CharField(
         max_length=200,
         verbose_name='Мера измерения'
