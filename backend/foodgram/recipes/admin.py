@@ -11,7 +11,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ('name', 'author', 'tags', )
 
     def get_favorite_count(self, obj):
-        self.short_description = 'Кол-во добавлений в избранное'
+        self.short_description = 'Кол-во добавлений в избранное '
         return obj.users_favorites.count()
 
 
